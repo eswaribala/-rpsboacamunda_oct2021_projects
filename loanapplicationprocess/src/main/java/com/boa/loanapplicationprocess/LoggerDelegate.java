@@ -17,7 +17,7 @@ public class LoggerDelegate implements JavaDelegate {
   private final Logger LOGGER = Logger.getLogger(LoggerDelegate.class.getName());
   
   public void execute(DelegateExecution execution) throws Exception {
-    
+    execution.setVariable("action", "Started");
     LOGGER.info("\n\n  ... LoggerDelegate invoked by "
             + "activityName='" + execution.getCurrentActivityName() + "'"
             + ", activityId=" + execution.getCurrentActivityId()
