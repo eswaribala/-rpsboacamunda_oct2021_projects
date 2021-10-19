@@ -1,0 +1,142 @@
+<!--
+You can use this form through Camunda Tasklist
+by setting the formKey of a BPMN User Task to:
+embedded:/forms/task-form-pdf-viewer.html
+-->
+
+<form role="form">
+
+<!-- two-column layout -->
+<div class="container-fluid">
+<div class="row">
+  <div class="col-md-4">
+
+  <!-- table for listing existing variables -->
+  <script cam-script type="text/form-script">
+    var variableManager = camForm.variableManager;
+   //$scope.options.hideCompleteButton = true;
+     
+   $scope.accept = function($event) {
+    //alert("hi");
+          $event.preventDefault();
+          $event.stopPropagation();
+ camForm.variableManager.variableManager.createVariable({
+                name: 'status',
+                type: 'String',
+                value: 'accepted',
+                isDirty: true
+            });
+        
+          $event.submitPrevented = false;
+          camForm.submit();
+          $scope.complete();     
+        };
+$scope.reject = function($event) {
+          $event.preventDefault();
+          $event.stopPropagation();
+          camForm.variableManager.variableManager.createVariable({
+                name: 'status',
+                type: 'String',
+                value: 'rejected',
+                isDirty: true
+            });
+        
+
+          $event.submitPrevented = false;
+          camForm.submit();
+          $scope.complete();  
+        };
+  
+    camForm.on('form-loaded', function() {
+      // variables that are not already used in cam-variable bindings
+      // must be fetched explicitly
+      camForm.variableManager.fetchVariable('name');
+//      camForm.variableManager.fetchVariable('');
+    });
+
+    camForm.on('variables-fetched', function() {
+      // access to all process variables after the form has loaded
+      $scope.variables = variableManager.variables;
+//      debugger;
+    });
+  </script>
+  <h3>Process Variables</h3>
+  <table class="table table-striped">
+    <tr>
+      <td>Name</td>
+      <td>{{variables.name.value}}</td>
+    </tr>
+<!--
+    <tr>
+      <td></td>
+      <td>{{variables..value}}</td>
+    </tr>
+-->
+    <tr ng-repeat="variable in variables">
+      <!-- TODO ignore file and object variables -->
+      <td>{{variable.name}}</td>
+      <td>{{variable.value}}</td>
+    </tr>
+  </table>
+
+  <!-- file download -->  
+  <div class="form-group">
+    <label class="control-label">Document</label>
+    <div class="controls">
+      <a cam-file-download="adharCardDoc"></a>
+    </div>
+  </div>
+
+
+  </div>
+  <!-- 2nd column -->
+  <div class="col-md-8">
+  
+    <!-- PDF viewer -->  
+  	<object data="{{contextPath}}/file-variable?taskId={{taskId}}&variableName=adharCardDoc" type="application/pdf" style="width:100%; height:585px;">
+		 <p>
+		 	It appears you don't have a PDF plugin for this browser. No biggie... you can 
+		 	<a href="{{contextPath}}/file-variable?taskId={{taskId}}&variableName=adharCardDoc"> click here to download the PDF file.</a>
+		 </p>
+ 	</object>
+    <script cam-script type="text/form-script">
+      camForm.on('form-loaded', function() {
+        $scope.contextPath = camForm.formUrl.split("/forms/")[0];
+        $scope.taskId = camForm.taskId;
+      });
+    </script>
+
+  <!-- end two-column layout -->
+  </div>
+</div>
+</div>  
+ <!--  
+<div class="container-fluid">
+<div class="row">
+  <div class="col-md-4">
+<button ng-click="accept($event)"   class="btn btn-success" >Accept</button>
+<button ng-click="reject($event)"  class="btn btn-warning">Reject</button>
+
+</div>
+</div>
+</div>
+-->
+
+  <!-- checkbox -->
+  <div class="form-group">
+    <label for="approved" class="col-sm-2 control-label">Approve?</label>
+    <div class="col-sm-10">
+      <div class="checkbox">
+        <label>
+          <input type="checkbox"
+                 name="approved"
+                 cam-variable-name="approved"
+                 cam-variable-type="Boolean"
+                 checked="checked"
+                 class="form-control" />
+          approved
+        </label>
+      </div>
+    </div>
+  </div>
+</form>
