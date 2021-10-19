@@ -5,7 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-@EnableProcessApplication("loanapplicationprocess")
+@EnableProcessApplication("upload_process")
 public class CamundaApplication {
 
   public static void main(String... args) {
