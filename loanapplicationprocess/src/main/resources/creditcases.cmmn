@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cmmn:definitions xmlns:dc="http://www.omg.org/spec/CMMN/20151109/DC" xmlns:cmmndi="http://www.omg.org/spec/CMMN/20151109/CMMNDI" xmlns:cmmn="http://www.omg.org/spec/CMMN/20151109/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/cmmn" id="Definitions_0fy0h3w" targetNamespace="http://bpmn.io/schema/cmmn" exporter="Camunda Modeler" exporterVersion="4.9.0">
+  <cmmn:case id="Case_08hjzq6">
+    <cmmn:casePlanModel id="CasePlanModel_09mj9bk" name="CreditCardModel">
+      <cmmn:planItem id="PlanItem_1" definitionRef="ProcessTask_1upw6mx" />
+      <cmmn:planItem id="PlanItem_1u1y8ii" definitionRef="HumanTask_088nyr0" />
+      <cmmn:planItem id="PlanItem_1uxtkv9" definitionRef="ProcessTask_0otb5tq" />
+      <cmmn:processTask id="ProcessTask_1upw6mx" name="Tele caller Approach Customer" />
+      <cmmn:humanTask id="HumanTask_088nyr0" name="Customer Fills Form" camunda:formKey="embedded:/forms/loanapplication-form.html" camunda:assignee="demo" />
+      <cmmn:processTask id="ProcessTask_0otb5tq" name="Background Verification" />
+    </cmmn:casePlanModel>
+  </cmmn:case>
+  <cmmndi:CMMNDI>
+    <cmmndi:CMMNDiagram id="creditcard_cmmn" name="Credit Card CMMN">
+      <cmmndi:Size width="500" height="500" />
+      <cmmndi:CMMNShape id="DI_CasePlanModel_09mj9bk" cmmnElementRef="CasePlanModel_09mj9bk">
+        <dc:Bounds x="176" y="99" width="534" height="389" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="PlanItem_1c322nk_di" cmmnElementRef="PlanItem_1">
+        <dc:Bounds x="212" y="132" width="100" height="80" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="PlanItem_1b8c9om_di" cmmnElementRef="PlanItem_1u1y8ii">
+        <dc:Bounds x="212" y="256" width="100" height="80" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="PlanItem_1swb449_di" cmmnElementRef="PlanItem_1uxtkv9">
+        <dc:Bounds x="212" y="378" width="100" height="80" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+    </cmmndi:CMMNDiagram>
+  </cmmndi:CMMNDI>
+</cmmn:definitions>
