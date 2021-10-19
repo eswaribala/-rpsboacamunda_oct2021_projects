@@ -121,6 +121,12 @@
       <scope>runtime</scope>
     </dependency>
 
+ <dependency>
+	    <groupId>org.codehaus.groovy</groupId>
+	    <artifactId>groovy-all</artifactId>
+	    <version>3.0.0</version>
+	    <type>pom</type>
+	</dependency>
   </dependencies>
 
   <repositories>
