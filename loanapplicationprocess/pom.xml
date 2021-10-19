@@ -120,8 +120,15 @@
       <artifactId>jaxb-api</artifactId>
       <scope>runtime</scope>
     </dependency>
-
- <dependency>
+    <!-- Hot reloading -->
+	<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-devtools</artifactId>
+				<scope>runtime</scope>
+				<optional>true</optional>
+			</dependency>
+	
+	 <dependency>
 	    <groupId>org.codehaus.groovy</groupId>
 	    <artifactId>groovy-all</artifactId>
 	    <version>3.0.0</version>
