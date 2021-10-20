@@ -43,7 +43,7 @@
       <bpmn:outgoing>Flow_0dmvych</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:sequenceFlow id="Flow_0ifr69o" sourceRef="Activity_1486l5j" targetRef="Save_Event" />
-    <bpmn:serviceTask id="Activity_1486l5j" name="Save Appointment" camunda:delegateExpression="${saveappointmentt}">
+    <bpmn:serviceTask id="Activity_1486l5j" name="Save Appointment" camunda:delegateExpression="${saveappointment}">
       <bpmn:incoming>Flow_0dmvych</bpmn:incoming>
       <bpmn:incoming>Flow_0lv9mbk</bpmn:incoming>
       <bpmn:outgoing>Flow_0ifr69o</bpmn:outgoing>
