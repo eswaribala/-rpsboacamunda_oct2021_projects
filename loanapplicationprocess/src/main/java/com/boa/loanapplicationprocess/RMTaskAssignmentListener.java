@@ -4,18 +4,21 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.mail.Email;
 import org.apache.commons.mail.SimpleEmail;
-
+import org.camunda.bpm.engine.HistoryService;
 import org.camunda.bpm.engine.IdentityService;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.DelegateTask;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.camunda.bpm.engine.delegate.TaskListener;
+import org.camunda.bpm.engine.history.UserOperationLogQuery;
 import org.camunda.bpm.engine.identity.User;
 import org.camunda.bpm.engine.impl.context.Context;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 @Component("RMTask")
 public class RMTaskAssignmentListener implements JavaDelegate,TaskListener {
-
+	@Autowired
+	private HistoryService historyService;
   // TODO: Set Mail Server Properties
   protected static final String HOST = "mail.example.org";
   protected static final String USER = "admin@example.org";
@@ -86,6 +89,9 @@ public void execute(DelegateExecution execution) throws Exception {
             + ", executionId=" + execution.getId()
             + ", variables=" + execution.getVariables()
             + " \n\n");
+    
+    
+   
 }
 
 }

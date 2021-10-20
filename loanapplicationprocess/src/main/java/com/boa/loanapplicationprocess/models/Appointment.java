@@ -11,8 +11,11 @@ import javax.persistence.Table;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
+
+import lombok.Data;
 @Entity
 @Table(name="Appointment")
+@Data
 public class Appointment {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
