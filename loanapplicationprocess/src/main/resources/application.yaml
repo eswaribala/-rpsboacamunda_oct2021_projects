@@ -18,4 +18,4 @@ camunda.bpm:
     create: All Tasks
 #  default-serialization-format: application/json
 server.port: 7074
-
+url: http://localhost:7074/appointments
