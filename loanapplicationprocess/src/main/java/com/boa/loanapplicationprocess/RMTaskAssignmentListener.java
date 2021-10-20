@@ -6,12 +6,15 @@ import org.apache.commons.mail.Email;
 import org.apache.commons.mail.SimpleEmail;
 
 import org.camunda.bpm.engine.IdentityService;
+import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.DelegateTask;
+import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.camunda.bpm.engine.delegate.TaskListener;
 import org.camunda.bpm.engine.identity.User;
 import org.camunda.bpm.engine.impl.context.Context;
-
-public class RMTaskAssignmentListener implements TaskListener {
+import org.springframework.stereotype.Component;
+@Component("RMTask")
+public class RMTaskAssignmentListener implements JavaDelegate,TaskListener {
 
   // TODO: Set Mail Server Properties
   protected static final String HOST = "mail.example.org";
@@ -69,5 +72,20 @@ public class RMTaskAssignmentListener implements TaskListener {
     }
 
   }
+
+@Override
+public void execute(DelegateExecution execution) throws Exception {
+	// TODO Auto-generated method stub
+
+    LOGGER.info("\n\n  ... RM LoggerDelegate invoked by "
+            + "activityName='" + execution.getCurrentActivityName() + "'"
+            + ", activityId=" + execution.getCurrentActivityId()
+            + ", processDefinitionId=" + execution.getProcessDefinitionId()
+            + ", processInstanceId=" + execution.getProcessInstanceId()
+            + ", businessKey=" + execution.getProcessBusinessKey()
+            + ", executionId=" + execution.getId()
+            + ", variables=" + execution.getVariables()
+            + " \n\n");
+}
 
 }
