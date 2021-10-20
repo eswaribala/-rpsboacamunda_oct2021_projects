@@ -6,13 +6,14 @@
     </bpmn:startEvent>
     <bpmn:sequenceFlow id="Flow_1mp6wva" sourceRef="StartEvent_1" targetRef="uploadadharcard" />
     <bpmn:sequenceFlow id="Flow_0nqa4ft" sourceRef="uploadadharcard" targetRef="reviewdoc" />
-    <bpmn:endEvent id="Event_100v4g1">
+    <bpmn:endEvent id="Upload_Doc_End_Event">
       <bpmn:incoming>Flow_01dop0c</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_1xk6jh9" sourceRef="reviewdoc" targetRef="Gateway_1gt7m7z" />
     <bpmn:userTask id="uploadadharcard" name="Upload adharcard" camunda:formKey="embedded:/forms/task-form-pdf-upload.html">
       <bpmn:incoming>Flow_1mp6wva</bpmn:incoming>
       <bpmn:incoming>Flow_0ujy00u</bpmn:incoming>
+      <bpmn:incoming>Flow_10i0qun</bpmn:incoming>
       <bpmn:outgoing>Flow_0nqa4ft</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:userTask id="reviewdoc" name="Review Doc" camunda:formKey="embedded:/forms/task-form-pdf-viewer.html">
@@ -42,15 +43,36 @@
         <bpmn:incoming>Flow_0ahzl4e</bpmn:incoming>
         <bpmn:outgoing>Flow_00hdgch</bpmn:outgoing>
       </bpmn:callActivity>
-      <bpmn:endEvent id="Event_04v6n4b">
-        <bpmn:incoming>Flow_00hdgch</bpmn:incoming>
+      <bpmn:endEvent id="Loan_Accepted_Event">
+        <bpmn:incoming>Flow_08ci3ps</bpmn:incoming>
       </bpmn:endEvent>
-      <bpmn:sequenceFlow id="Flow_00hdgch" sourceRef="intiateloanprocess" targetRef="Event_04v6n4b" />
+      <bpmn:sequenceFlow id="Flow_00hdgch" sourceRef="intiateloanprocess" targetRef="Gateway_1s39zqx" />
+      <bpmn:exclusiveGateway id="Gateway_1s39zqx">
+        <bpmn:incoming>Flow_00hdgch</bpmn:incoming>
+        <bpmn:outgoing>Flow_08ci3ps</bpmn:outgoing>
+        <bpmn:outgoing>Flow_0uxe8vg</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:sequenceFlow id="Flow_08ci3ps" sourceRef="Gateway_1s39zqx" targetRef="Loan_Accepted_Event">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">#{action == "success"}</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+      <bpmn:sequenceFlow id="Flow_0uxe8vg" sourceRef="Gateway_1s39zqx" targetRef="Loan_Rejected_Erorr_Event">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">#{action == "failure"}</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+      <bpmn:endEvent id="Loan_Rejected_Erorr_Event">
+        <bpmn:incoming>Flow_0uxe8vg</bpmn:incoming>
+        <bpmn:errorEventDefinition id="ErrorEventDefinition_0ugw719" errorRef="Error_17nhx8q" />
+      </bpmn:endEvent>
+      <bpmn:association id="Association_1ft5w2v" sourceRef="Loan_Rejected_Erorr_Event" targetRef="TextAnnotation_1aopv2g" />
     </bpmn:subProcess>
-    <bpmn:sequenceFlow id="Flow_01dop0c" sourceRef="Activity_0kjhwz7" targetRef="Event_100v4g1" />
+    <bpmn:sequenceFlow id="Flow_01dop0c" sourceRef="Activity_0kjhwz7" targetRef="Upload_Doc_End_Event" />
     <bpmn:sequenceFlow id="Flow_0ujy00u" sourceRef="Gateway_1gt7m7z" targetRef="uploadadharcard">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">#{not approved}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
+    <bpmn:boundaryEvent id="Loan_SubProcess_Error_Escalation" attachedToRef="Activity_0kjhwz7">
+      <bpmn:outgoing>Flow_10i0qun</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_04fnh4l" errorRef="Error_17nhx8q" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_10i0qun" sourceRef="Loan_SubProcess_Error_Escalation" targetRef="uploadadharcard" />
     <bpmn:textAnnotation id="TextAnnotation_1hdpkqc">
       <bpmn:text>upload adhar card pdf</bpmn:text>
     </bpmn:textAnnotation>
@@ -59,84 +81,142 @@
       <bpmn:text>Review Document</bpmn:text>
     </bpmn:textAnnotation>
     <bpmn:association id="Association_0a4wv8f" sourceRef="reviewdoc" targetRef="TextAnnotation_094vqbq" />
+    <bpmn:textAnnotation id="TextAnnotation_0eovvxk">
+      <bpmn:text>Embedded Sub Process</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_0lrh2pu" sourceRef="Activity_0kjhwz7" targetRef="TextAnnotation_0eovvxk" />
+    <bpmn:textAnnotation id="TextAnnotation_1aopv2g">
+      <bpmn:text>Error End Event</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:textAnnotation id="TextAnnotation_1sbkbm8">
+      <bpmn:text>Intermediate Boundary Error Event</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_1mm52vh" sourceRef="Loan_SubProcess_Error_Escalation" targetRef="TextAnnotation_1sbkbm8" />
   </bpmn:process>
+  <bpmn:error id="Error_17nhx8q" name="loan_rejected_error" errorCode="10000" camunda:errorMessage="Not matching bank rules" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="upload_process">
       <bpmndi:BPMNShape id="TextAnnotation_1hdpkqc_di" bpmnElement="TextAnnotation_1hdpkqc" bioc:stroke="#8e24aa" bioc:fill="#e1bee7" color:background-color="#e1bee7" color:border-color="#8e24aa">
-        <dc:Bounds x="300" y="180" width="100" height="41" />
+        <dc:Bounds x="280" y="183" width="100" height="41" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="TextAnnotation_094vqbq_di" bpmnElement="TextAnnotation_094vqbq" bioc:stroke="#8e24aa" bioc:fill="#e1bee7" color:background-color="#e1bee7" color:border-color="#8e24aa">
-        <dc:Bounds x="460" y="180" width="100" height="41" />
+        <dc:Bounds x="440" y="183" width="100" height="41" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="Flow_1xk6jh9_di" bpmnElement="Flow_1xk6jh9">
-        <di:waypoint x="530" y="287" />
-        <di:waypoint x="575" y="287" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0nqa4ft_di" bpmnElement="Flow_0nqa4ft">
-        <di:waypoint x="370" y="287" />
-        <di:waypoint x="430" y="287" />
-      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_0eovvxk_di" bpmnElement="TextAnnotation_0eovvxk" bioc:stroke="#8e24aa" bioc:fill="#e1bee7" color:background-color="#e1bee7" color:border-color="#8e24aa">
+        <dc:Bounds x="800" y="123" width="100" height="41" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_1aopv2g_di" bpmnElement="TextAnnotation_1aopv2g" bioc:stroke="#8e24aa" bioc:fill="#e1bee7" color:background-color="#e1bee7" color:border-color="#8e24aa">
+        <dc:Bounds x="1090" y="134" width="100" height="30" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_1sbkbm8_di" bpmnElement="TextAnnotation_1sbkbm8" bioc:stroke="#8e24aa" bioc:fill="#e1bee7" color:background-color="#e1bee7" color:border-color="#8e24aa">
+        <dc:Bounds x="980" y="440" width="160" height="55" />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_1mp6wva_di" bpmnElement="Flow_1mp6wva">
-        <di:waypoint x="215" y="287" />
-        <di:waypoint x="270" y="287" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0g9tohb_di" bpmnElement="Flow_0g9tohb">
-        <di:waypoint x="625" y="287" />
-        <di:waypoint x="680" y="287" />
+        <di:waypoint x="195" y="290" />
+        <di:waypoint x="250" y="290" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_01dop0c_di" bpmnElement="Flow_01dop0c">
-        <di:waypoint x="1030" y="287" />
-        <di:waypoint x="1142" y="287" />
+        <di:waypoint x="1230" y="290" />
+        <di:waypoint x="1332" y="290" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0ujy00u_di" bpmnElement="Flow_0ujy00u">
-        <di:waypoint x="600" y="262" />
-        <di:waypoint x="600" y="80" />
-        <di:waypoint x="320" y="80" />
-        <di:waypoint x="320" y="247" />
+        <di:waypoint x="580" y="265" />
+        <di:waypoint x="580" y="83" />
+        <di:waypoint x="300" y="83" />
+        <di:waypoint x="300" y="250" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0nqa4ft_di" bpmnElement="Flow_0nqa4ft">
+        <di:waypoint x="350" y="290" />
+        <di:waypoint x="410" y="290" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1xk6jh9_di" bpmnElement="Flow_1xk6jh9">
+        <di:waypoint x="510" y="290" />
+        <di:waypoint x="555" y="290" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0g9tohb_di" bpmnElement="Flow_0g9tohb">
+        <di:waypoint x="605" y="290" />
+        <di:waypoint x="660" y="290" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_10i0qun_di" bpmnElement="Flow_10i0qun">
+        <di:waypoint x="930" y="428" />
+        <di:waypoint x="930" y="550" />
+        <di:waypoint x="300" y="550" />
+        <di:waypoint x="300" y="330" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
-        <dc:Bounds x="179" y="269" width="36" height="36" />
+        <dc:Bounds x="159" y="272" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1t3nopn_di" bpmnElement="uploadadharcard" bioc:stroke="#43a047" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#43a047">
-        <dc:Bounds x="270" y="247" width="100" height="80" />
+        <dc:Bounds x="250" y="250" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0dlaatl_di" bpmnElement="reviewdoc" bioc:stroke="#fb8c00" bioc:fill="#ffe0b2" color:background-color="#ffe0b2" color:border-color="#fb8c00">
-        <dc:Bounds x="430" y="247" width="100" height="80" />
+        <dc:Bounds x="410" y="250" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_1gt7m7z_di" bpmnElement="Gateway_1gt7m7z" isMarkerVisible="true">
-        <dc:Bounds x="575" y="262" width="50" height="50" />
+        <dc:Bounds x="555" y="265" width="50" height="50" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_100v4g1_di" bpmnElement="Event_100v4g1">
-        <dc:Bounds x="1142" y="269" width="36" height="36" />
+      <bpmndi:BPMNShape id="Event_100v4g1_di" bpmnElement="Upload_Doc_End_Event" bioc:stroke="#43a047" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#43a047">
+        <dc:Bounds x="1332" y="272" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0kjhwz7_di" bpmnElement="Activity_0kjhwz7" isExpanded="true">
-        <dc:Bounds x="680" y="187" width="350" height="200" />
+        <dc:Bounds x="660" y="190" width="570" height="220" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="Flow_0ahzl4e_di" bpmnElement="Flow_0ahzl4e">
-        <di:waypoint x="756" y="287" />
-        <di:waypoint x="810" y="287" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_00hdgch_di" bpmnElement="Flow_00hdgch">
-        <di:waypoint x="910" y="287" />
-        <di:waypoint x="952" y="287" />
+        <di:waypoint x="890" y="290" />
+        <di:waypoint x="975" y="290" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ahzl4e_di" bpmnElement="Flow_0ahzl4e">
+        <di:waypoint x="736" y="290" />
+        <di:waypoint x="790" y="290" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_08ci3ps_di" bpmnElement="Flow_08ci3ps">
+        <di:waypoint x="1000" y="315" />
+        <di:waypoint x="1000" y="370" />
+        <di:waypoint x="1122" y="370" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0uxe8vg_di" bpmnElement="Flow_0uxe8vg">
+        <di:waypoint x="1000" y="265" />
+        <di:waypoint x="1000" y="220" />
+        <di:waypoint x="1122" y="220" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Event_020miwz_di" bpmnElement="Event_020miwz">
-        <dc:Bounds x="720" y="269" width="36" height="36" />
+        <dc:Bounds x="700" y="272" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0w3c4u0_di" bpmnElement="intiateloanprocess" bioc:stroke="#fb8c00" bioc:fill="#ffe0b2" color:background-color="#ffe0b2" color:border-color="#fb8c00">
-        <dc:Bounds x="810" y="247" width="100" height="80" />
+        <dc:Bounds x="790" y="250" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_04v6n4b_di" bpmnElement="Event_04v6n4b">
-        <dc:Bounds x="952" y="269" width="36" height="36" />
+      <bpmndi:BPMNShape id="Gateway_1s39zqx_di" bpmnElement="Gateway_1s39zqx" isMarkerVisible="true">
+        <dc:Bounds x="975" y="265" width="50" height="50" />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_04v6n4b_di" bpmnElement="Loan_Accepted_Event" bioc:stroke="#43a047" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#43a047">
+        <dc:Bounds x="1122" y="352" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0s5nv1d_di" bpmnElement="Loan_Rejected_Erorr_Event" bioc:stroke="#e53935" bioc:fill="#ffcdd2" color:background-color="#ffcdd2" color:border-color="#e53935">
+        <dc:Bounds x="1122" y="202" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_1ft5w2v_di" bpmnElement="Association_1ft5w2v">
+        <di:waypoint x="1140" y="202" />
+        <di:waypoint x="1140" y="164" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Association_01mu10b_di" bpmnElement="Association_01mu10b">
-        <di:waypoint x="333" y="247" />
-        <di:waypoint x="342" y="221" />
+        <di:waypoint x="313" y="250" />
+        <di:waypoint x="322" y="224" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Association_0a4wv8f_di" bpmnElement="Association_0a4wv8f">
-        <di:waypoint x="493" y="247" />
-        <di:waypoint x="502" y="221" />
+        <di:waypoint x="473" y="250" />
+        <di:waypoint x="482" y="224" />
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_0lrh2pu_di" bpmnElement="Association_0lrh2pu">
+        <di:waypoint x="845" y="190" />
+        <di:waypoint x="847" y="164" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_1mm52vh_di" bpmnElement="Association_1mm52vh">
+        <di:waypoint x="946" y="417" />
+        <di:waypoint x="997" y="440" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_1v5lcoo_di" bpmnElement="Loan_SubProcess_Error_Escalation" bioc:stroke="#e53935" bioc:fill="#ffcdd2" color:background-color="#ffcdd2" color:border-color="#e53935">
+        <dc:Bounds x="912" y="392" width="36" height="36" />
+      </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>
