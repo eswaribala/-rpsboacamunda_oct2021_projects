@@ -1,0 +1,61 @@
+<!--
+You can use this form through Camunda Tasklist
+by setting the formKey of a BPMN Start Event to:
+embedded:/forms/appointment-approval-form.html
+-->
+
+<form class="form-horizontal" role="form">
+<script cam-script type="text/form-script">
+    camForm.on('form-loaded', function() {
+      camForm.variableManager.fetchVariable('customerId');
+      camForm.variableManager.fetchVariable('doa');
+      camForm.variableManager.fetchVariable('time');
+     camForm.variableManager.fetchVariable('reason');
+    });
+    camForm.on('variables-restored', function() {
+      $scope.customerId = camForm.variableManager.variableValue('customerId');
+      $scope.doa = camForm.variableManager.variableValue('doa');
+      $scope.time = camForm.variableManager.variableValue('time');
+       $scope.reason = camForm.variableManager.variableValue('reason');
+      console.log("setting variables to scope");
+    });
+  </script>
+  
+  
+  <h2>Appointment Details</h2>
+
+  <table>
+
+    <tr>
+      <td>Customer Id:</td>
+      <td>{{ customerId }}</td>
+    </tr>
+
+    <tr>
+      <td>Date of Appointment:</td>
+      <td>{{doa}}</td>
+    </tr>
+
+    <tr>
+      <td>Time:</td>
+      <td>{{time}}</td>
+    </tr>
+     <tr>
+      <td>Reason:</td>
+      <td>{{reason}}</td>
+    </tr>
+  </table>
+   
+
+  <h2>Approval</h2>
+
+  Do you approve this request?
+
+  <div class="form-group">
+    <input type="checkbox" cam-variable-name="approved" cam-variable-type="Boolean" />
+  </div>
+
+  <script cam-script type="text/form-script">
+    // custom JavaScript goes here
+  </script>
+</form>
