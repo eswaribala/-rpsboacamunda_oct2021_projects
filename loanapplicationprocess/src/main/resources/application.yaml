@@ -1,9 +1,13 @@
 spring.datasource:
-  url: jdbc:h2:./camunda-db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+  #url: jdbc:h2:./camunda-db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
 #shareable h2 database: jdbc:h2:./camunda-db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;AUTO_SERVER=TRUE
-  username: sa
-  password: sa
-spring.h2.console.enabled: true
+  #username: sa
+  #password: sa
+  driverClassName: com.mysql.jdbc.Driver
+  url: jdbc:mysql://localhost:3306/boa2021db?useSSL=true&nullCatalogMeansCurrent=true 
+  username: root
+  password: vignesh
+#spring.h2.console.enabled: true
 camunda.bpm:
   admin-user:
     id: demo
@@ -14,3 +18,4 @@ camunda.bpm:
     create: All Tasks
 #  default-serialization-format: application/json
 server.port: 7074
+

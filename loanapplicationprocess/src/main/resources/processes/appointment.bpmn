@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0w85ezj" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.11.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.15.0">
-  <bpmn:process id="Process_1wjhim4" isExecutable="true">
-    <bpmn:sequenceFlow id="Flow_0zxzauv" sourceRef="StartEvent_1" targetRef="Activity_1sjr5bb" />
+  <bpmn:process id="appointment_process" isExecutable="true">
+    <bpmn:sequenceFlow id="Flow_0zxzauv" sourceRef="appt_start_evnt" targetRef="rm_send_task" />
     <bpmn:endEvent id="Event_0wt6nw0">
       <bpmn:incoming>Flow_0v8to8p</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="Flow_0v8to8p" sourceRef="Activity_1sjr5bb" targetRef="Event_0wt6nw0" />
-    <bpmn:startEvent id="StartEvent_1">
+    <bpmn:sequenceFlow id="Flow_0v8to8p" sourceRef="rm_send_task" targetRef="Event_0wt6nw0" />
+    <bpmn:startEvent id="appt_start_evnt">
       <bpmn:outgoing>Flow_0zxzauv</bpmn:outgoing>
       <bpmn:messageEventDefinition id="MessageEventDefinition_0i0tp4d" messageRef="Message_0jdhrh9" />
     </bpmn:startEvent>
-    <bpmn:sendTask id="Activity_1sjr5bb" name="Send Request to RM" camunda:delegateExpression="${RMTask}">
+    <bpmn:sendTask id="rm_send_task" name="Send Request to RM" camunda:delegateExpression="${RMTask}">
       <bpmn:extensionElements>
         <camunda:executionListener class="com.boa.loanapplicationprocess.RMTaskAssignmentListener" event="start" />
       </bpmn:extensionElements>
@@ -20,11 +20,11 @@
     <bpmn:textAnnotation id="TextAnnotation_0hcy92d">
       <bpmn:text>Send Appointment Request</bpmn:text>
     </bpmn:textAnnotation>
-    <bpmn:association id="Association_113n1l9" sourceRef="StartEvent_1" targetRef="TextAnnotation_0hcy92d" />
+    <bpmn:association id="Association_113n1l9" sourceRef="appt_start_evnt" targetRef="TextAnnotation_0hcy92d" />
   </bpmn:process>
   <bpmn:message id="Message_0jdhrh9" name="appointment_req_message" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1wjhim4">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="appointment_process">
       <bpmndi:BPMNEdge id="Flow_0v8to8p_di" bpmnElement="Flow_0v8to8p">
         <di:waypoint x="430" y="177" />
         <di:waypoint x="522" y="177" />
@@ -36,10 +36,10 @@
       <bpmndi:BPMNShape id="Event_0wt6nw0_di" bpmnElement="Event_0wt6nw0">
         <dc:Bounds x="522" y="159" width="36" height="36" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_00e2l5m_di" bpmnElement="StartEvent_1" bioc:stroke="#43a047" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#43a047">
+      <bpmndi:BPMNShape id="Event_00e2l5m_di" bpmnElement="appt_start_evnt" bioc:stroke="#43a047" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#43a047">
         <dc:Bounds x="179" y="159" width="36" height="36" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0i1e1pq_di" bpmnElement="Activity_1sjr5bb" bioc:stroke="#fb8c00" bioc:fill="#ffe0b2" color:background-color="#ffe0b2" color:border-color="#fb8c00">
+      <bpmndi:BPMNShape id="Activity_0i1e1pq_di" bpmnElement="rm_send_task" bioc:stroke="#fb8c00" bioc:fill="#ffe0b2" color:background-color="#ffe0b2" color:border-color="#fb8c00">
         <dc:Bounds x="330" y="137" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="TextAnnotation_0hcy92d_di" bpmnElement="TextAnnotation_0hcy92d">
