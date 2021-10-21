@@ -45,6 +45,6 @@ spring.data.mongodb.database: customerdb
 spring.data.mongodb.url: mongodb://localhost:27017/stockdb
 #kafka properties
 kafka.bootstrapAddress: localhost:9092
-customer.topic.name: boainv2021
-customer.topic.group.id: group_id
+product.topic.name: boainv2021
+product.topic.group.id: group_id
 
