@@ -19,7 +19,7 @@ camunda.bpm:
     create: All Tasks
 #  default-serialization-format: application/json
 server.port: 7074
-url: http://localhost:7074/appointments
+productUrl: http://localhost:7074/products
 
 #data source connection pool
 spring.datasource.hikari.connection-timeout: 20000

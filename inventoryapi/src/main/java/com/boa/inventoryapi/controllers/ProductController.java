@@ -30,7 +30,7 @@ public class ProductController {
 	@GetMapping("/products/{productId}")
 	public void publishProduct(@PathVariable("productId") long productId) {
 		
-	//	this.productDataPublisher.sendMessage(productId);
+	  this.productDataPublisher.sendMessage(productId);
 		
 	}
 	
