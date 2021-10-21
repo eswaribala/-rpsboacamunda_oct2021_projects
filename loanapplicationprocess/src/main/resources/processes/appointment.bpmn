@@ -85,6 +85,21 @@
       <bpmn:incoming>Flow_0ifr69o</bpmn:incoming>
       <bpmn:messageEventDefinition id="MessageEventDefinition_0uw5ote" camunda:expression="${execution.setVariable(&#34;action&#34;,&#34;saved&#34;)}" />
     </bpmn:endEvent>
+    <bpmn:subProcess id="Activity_1l2uqrg" triggeredByEvent="true">
+      <bpmn:startEvent id="Event_18hkn7o">
+        <bpmn:outgoing>Flow_1j9vu59</bpmn:outgoing>
+        <bpmn:signalEventDefinition id="SignalEventDefinition_18a2fa2" signalRef="Signal_19dqlbf" />
+      </bpmn:startEvent>
+      <bpmn:sequenceFlow id="Flow_1j9vu59" sourceRef="Event_18hkn7o" targetRef="Activity_1xk4xfl" />
+      <bpmn:endEvent id="Event_1cm36st">
+        <bpmn:incoming>Flow_0ciutc8</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="Flow_0ciutc8" sourceRef="Activity_1xk4xfl" targetRef="Event_1cm36st" />
+      <bpmn:userTask id="Activity_1xk4xfl" name="DS Notification" camunda:assignee="demo">
+        <bpmn:incoming>Flow_1j9vu59</bpmn:incoming>
+        <bpmn:outgoing>Flow_0ciutc8</bpmn:outgoing>
+      </bpmn:userTask>
+    </bpmn:subProcess>
     <bpmn:textAnnotation id="TextAnnotation_0hcy92d">
       <bpmn:text>Send Appointment Request</bpmn:text>
     </bpmn:textAnnotation>
@@ -124,6 +139,7 @@
   <bpmn:message id="Message_1djoxug" name="Appointment_Changed" />
   <bpmn:message id="Message_04qk2cz" name="Accept_Updated_Apt" />
   <bpmn:message id="Message_0943638" name="Reject_Updated_APT" />
+  <bpmn:signal id="Signal_19dqlbf" name="ds_signal" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="appointment_process">
       <bpmndi:BPMNEdge id="Flow_0lv9mbk_di" bpmnElement="Flow_0lv9mbk">
@@ -250,6 +266,26 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="TextAnnotation_0rhhj8v_di" bpmnElement="TextAnnotation_0rhhj8v" bioc:stroke="#8e24aa" bioc:fill="#e1bee7" color:background-color="#e1bee7" color:border-color="#8e24aa">
         <dc:Bounds x="850" y="80" width="100" height="70" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0hu10jc_di" bpmnElement="Activity_1l2uqrg" isExpanded="true">
+        <dc:Bounds x="260" y="800" width="350" height="200" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1j9vu59_di" bpmnElement="Flow_1j9vu59">
+        <di:waypoint x="336" y="900" />
+        <di:waypoint x="390" y="900" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ciutc8_di" bpmnElement="Flow_0ciutc8">
+        <di:waypoint x="490" y="900" />
+        <di:waypoint x="552" y="900" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_0293ra0_di" bpmnElement="Event_18hkn7o">
+        <dc:Bounds x="300" y="882" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1cm36st_di" bpmnElement="Event_1cm36st">
+        <dc:Bounds x="552" y="882" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0pyykfl_di" bpmnElement="Activity_1xk4xfl">
+        <dc:Bounds x="390" y="860" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1u16b53_di" bpmnElement="Appointment_Changed_Event" bioc:stroke="#fb8c00" bioc:fill="#ffe0b2" color:background-color="#ffe0b2" color:border-color="#fb8c00">
         <dc:Bounds x="772" y="352" width="36" height="36" />

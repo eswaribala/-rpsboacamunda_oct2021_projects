@@ -1,9 +1,16 @@
 package com.boa.loanapplicationprocess;
 
+import java.util.Date;
 import java.util.logging.Logger;
 
+import org.camunda.bpm.engine.HistoryService;
+import org.camunda.bpm.engine.ProcessEngine;
+import org.camunda.bpm.engine.ProcessEngineConfiguration;
+import org.camunda.bpm.engine.batch.Batch;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
+import org.camunda.bpm.engine.history.HistoricProcessInstanceQuery;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -13,11 +20,40 @@ import org.springframework.stereotype.Component;
  */
 @Component("logger")
 public class LoggerDelegate implements JavaDelegate {
- 
+@Autowired	
+ private HistoryService historyService;
   private final Logger LOGGER = Logger.getLogger(LoggerDelegate.class.getName());
   
   public void execute(DelegateExecution execution) throws Exception {
     execution.setVariable("action", "Started");
+		/*
+		 * ProcessEngine processEngine = ProcessEngineConfiguration
+		 * .createProcessEngineConfigurationFromResourceDefault()
+		 * .setHistory(ProcessEngineConfiguration.HISTORY_FULL) .buildProcessEngine();
+		 */
+    //audit log
+    //http://localhost:8080/engine-rest/history/activity-instance?processInstanceId={processInstanceId} 
+    historyService.createHistoricProcessInstanceQuery()
+    .finished()
+    .processDefinitionId(execution.getProcessDefinitionId())
+    .orderByProcessInstanceDuration().desc()
+    .listPage(0, 10);
+    HistoricProcessInstanceQuery query= historyService.createHistoricProcessInstanceQuery();
+    Batch batch = historyService.setRemovalTimeToHistoricProcessInstances()
+    		  .absoluteRemovalTime(new Date()) // sets an absolute removal time
+    		   // .clearedRemovalTime()        // resets the removal time to null
+    		   // .calculatedRemovalTime()     // calculation based on the engine's configuration
+    		  .byQuery(query)
+    		  .byIds(execution.getProcessInstanceId(), "...").executeAsync();
+    		   // .hierarchical()              
+    		  // sets a removal time across the hierarchy
+    		
+    historyService.createHistoricActivityInstanceQuery()
+    .activityType("serviceTask")
+    .processDefinitionId(execution.getProcessDefinitionId())
+    .finished()
+    .orderByHistoricActivityInstanceEndTime().desc()
+    .listPage(0, 1);
     LOGGER.info("\n\n  ... LoggerDelegate invoked by "
             + "activityName='" + execution.getCurrentActivityName() + "'"
             + ", activityId=" + execution.getCurrentActivityId()
