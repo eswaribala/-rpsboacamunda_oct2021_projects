@@ -1,0 +1,42 @@
+spring.datasource:
+  #url: jdbc:h2:./camunda-db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+#shareable h2 database: jdbc:h2:./camunda-db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;AUTO_SERVER=TRUE
+ # username: sa
+ # password: sa
+#spring.h2.console.enabled: true
+  driverClassName: com.mysql.jdbc.Driver
+  url: jdbc:mysql://localhost:3306/boa2021db?useSSL=true&nullCatalogMeansCurrent=true 
+  username: root
+  password: vignesh
+spring.jpa.hibernate.ddl-auto: update
+camunda.bpm:
+  admin-user:
+    id: demo
+    password: demo
+    firstName: Demo
+    lastName: Demo
+  filter:
+    create: All Tasks
+#  default-serialization-format: application/json
+server.port: 7070
+#secret key - should be encrypted
+jwt.secret: secretkey
+#3 minutes validity
+jwt.token.validity: 180000
+#data source connection pool
+spring.datasource.hikari.connection-timeout: 20000
+spring.datasource.hikari.minimum-idle: 5
+spring.datasource.hikari.maximum-pool-size: 12
+spring.datasource.hikari.idle-timeout: 300000
+spring.datasource.hikari.max-lifetime: 1200000
+# JPA (JpaBaseConfiguration, HibernateJpaAutoConfiguration)
+
+spring.jpa.database: default
+spring.jpa.show-sql: true
+# DATASOURCE (DataSourceAutoConfiguration & DataSourceProperties)
+spring.datasource.continue-on-error: false
+spring.datasource.generate-unique-name: false
+#spring.jpa.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
+spring.jpa.hibernate.naming.implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+spring.jpa.hibernate.naming.physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+spring.jackson.serialization.fail-on-empty-beans: false
