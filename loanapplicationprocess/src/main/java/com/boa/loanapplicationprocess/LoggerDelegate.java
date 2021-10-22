@@ -1,15 +1,19 @@
 package com.boa.loanapplicationprocess;
 
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.camunda.bpm.engine.HistoryService;
 import org.camunda.bpm.engine.ProcessEngine;
 import org.camunda.bpm.engine.ProcessEngineConfiguration;
+import org.camunda.bpm.engine.RepositoryService;
+import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.batch.Batch;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.camunda.bpm.engine.history.HistoricProcessInstanceQuery;
+import org.camunda.bpm.engine.repository.Deployment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,11 +26,34 @@ import org.springframework.stereotype.Component;
 public class LoggerDelegate implements JavaDelegate {
 @Autowired	
  private HistoryService historyService;
+@Autowired	
+ private RuntimeService runTimeService;
+@Autowired 
+private RepositoryService respositoryService;
+
+
+@Autowired
+ private RepositoryService repositoryService;
   private final Logger LOGGER = Logger.getLogger(LoggerDelegate.class.getName());
   
   public void execute(DelegateExecution execution) throws Exception {
     execution.setVariable("action", "Started");
-		/*
+	/*	
+    repositoryService
+    .createDeployment()
+    .tenantId("tenant1")
+    .addZipInputStream(null)
+    .deploy();
+
+    
+    List<Deployment> deployments = repositoryService
+    		  .createDeploymentQuery()
+    		  .tenantIdIn("tenant1", "tenant2")
+    		  .orderByTenantId()
+    		  .asc()
+    		  .list();
+    */
+    /*
 		 * ProcessEngine processEngine = ProcessEngineConfiguration
 		 * .createProcessEngineConfigurationFromResourceDefault()
 		 * .setHistory(ProcessEngineConfiguration.HISTORY_FULL) .buildProcessEngine();

@@ -4,9 +4,9 @@ spring.datasource:
   #username: sa
   #password: sa
   driverClassName: com.mysql.jdbc.Driver
-  url: jdbc:mysql://localhost:3306/boa2021db?useSSL=true&nullCatalogMeansCurrent=true 
+  url: jdbc:mysql://mysql:3306/boa2021db?useSSL=true&nullCatalogMeansCurrent=true 
   username: root
-  password: vignesh
+  password: password
 #spring.h2.console.enabled: true
 spring.jpa.hibernate.ddl-auto: update
 camunda.bpm:

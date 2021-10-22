@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.boa.inventoryapi.services.ProductService;
 import com.boa.inventoryapi.models.Product;
 import com.boa.inventoryapi.services.ProductDataPublisher;
+
+@RestController
 public class ProductController {
 
 	@Autowired

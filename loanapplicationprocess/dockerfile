@@ -1,0 +1,4 @@
+FROM java:8
+EXPOSE 7074
+ADD /target/loanapplicationprocess.jar loanapplicationprocess.jar
+ENTRYPOINT ["java","-jar","loanapplicationprocess.jar"]
